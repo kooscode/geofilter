@@ -249,7 +249,7 @@ int main(int argc, char** argv)
             tc::filetools::copy_file(image_source, image_target);
             
             //latitude, longitude, name, color
-            std::cout << std::fixed << std::setprecision(7) << cam_lat << ", " << std::fixed << std::setprecision(7) << cam_lon << ", rock, FFFF00" << std::endl;
+            //std::cout << std::fixed << std::setprecision(7) << cam_lat << ", " << std::fixed << std::setprecision(7) << cam_lon << ", rock, FFFF00" << std::endl;
             
             img_in++;
         }
