@@ -158,7 +158,6 @@ int main(int argc, char** argv)
     
     
     //Read all log file entries, filtered by line type we are looking for.
-    log_file = tc::filetools::path_append(root_folder, log_file);
     std::cout << "Reading Log from: " << log_file << std::endl;
     if (!tc::filetools::file_exists(log_file))
     {
