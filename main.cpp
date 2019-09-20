@@ -245,8 +245,8 @@ int main(int argc, char** argv)
         if ((cam_lat <= lat_max) && (cam_lat >= lat_min) && (cam_lon <= lon_max) && (cam_lon >= lon_min))
         {
             //copy to "IN" folder
-            //std::string image_target = tc::filetools::path_append(image_keep_folder, tc::filetools::get_filename(image_source));            
-            //tc::filetools::copy_file(image_source, image_target);
+            std::string image_target = tc::filetools::path_append(image_keep_folder, tc::filetools::get_filename(image_source));            
+            tc::filetools::copy_file(image_source, image_target);
             
             //latitude, longitude, name, color
             std::cout << std::fixed << std::setprecision(7) << cam_lat << ", " << std::fixed << std::setprecision(7) << cam_lon << ", rock, FFFF00" << std::endl;
@@ -256,7 +256,7 @@ int main(int argc, char** argv)
         else
         {
             //latitude, longitude, name, color
-            std::cout << std::fixed << std::setprecision(7) << cam_lat << ", " << std::fixed << std::setprecision(7) << cam_lon << ", rock, FFFF00" << std::endl;
+            //std::cout << std::fixed << std::setprecision(7) << cam_lat << ", " << std::fixed << std::setprecision(7) << cam_lon << ", rock, FFFF00" << std::endl;
             img_out++;
         }
     }
