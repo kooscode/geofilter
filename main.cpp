@@ -12,22 +12,6 @@
 
 namespace tc = terraclear;
 
-
-//double ft_to_m(double ft)
-//{
-//    return ft * 0.3048;
-//}
-//
-//double radtodeg(double rad)
-//{
-//    return (rad * 180.00f) / M_PI;
-//}
-//
-//double degtorad(double deg)
-//{
-//    return (deg * M_PI) / 180.00f;
-//}
-
 //split delimeted string into vector of parts..
 std::vector<std::string> split_string(const std::string& s, char delimiter)
 {
@@ -42,22 +26,38 @@ std::vector<std::string> split_string(const std::string& s, char delimiter)
    return tokens;
 }
 
-// GPS, Status,TWk,Wk,NSats,HDop,Lat,Lng,Alt,Spd,GCrs,VZ,TimeMS,hAcc
-// CAM, GPSTime,GPSWeek,Lat,Lng,Alt,RelAlt,Roll,Pitch,Yaw,TimeMS        
-enum CAM_PARTS
+#define CAM_LEN_v1 11
+enum CAM_PARTS_v1
 {
-    CAM, 
-    GPSTime,
-    GPSWeek,
-    Unknown1,
-    Lat,
-    Lng,
-    Alt,
-    RelAlt,
-    Roll,
-    Pitch,
-    Yaw,
-    TimeMS
+    V1_CAM,
+    V1_GPSTime,
+    V1_GPSWeek,
+    V1_Lat,
+    V1_Lng,
+    V1_Alt,
+    V1_RelAlt,
+    V1_Roll,
+    V1_Pitch,
+    V1_Yaw,
+    V1_TimeMS
+};
+
+#define CAM_LEN_v2 13
+enum CAM_PARTS_v2
+{
+    V2_CAM,
+    V2_TimeMS,
+    V2_GPSTime,
+    V2_GPSWeek,
+    V2_Lat,
+    V2_Lng,
+    V2_Alt,
+    V2_RelAlt,
+    V2_Roll,
+    V2_Pitch,
+    V2_Yaw,
+    V2_H_Accuracy,
+    V2_V_Accuracy
 };
 
 //a map to keep a count of all the entries per type
@@ -211,7 +211,7 @@ int main(int argc, char** argv)
     std::cout << "\t" << cnr1.LatitudeDegrees << "," << cnr1.LongitudeDegrees << std::endl;
     std::cout << "\t" << cnr2.LatitudeDegrees << "," << cnr2.LongitudeDegrees << std::endl << std::endl;
     
-    std::cout << "Moving Filtered Images to: " << image_keep_folder << std::endl << std::endl;
+    std::cout << "Copying Filtered Images to: " << image_keep_folder << std::endl << std::endl;
 
     int img_in = 0;
     int img_out = 0;   
@@ -227,17 +227,26 @@ int main(int argc, char** argv)
         cam_line.erase(end_pos, cam_line.end());
 
         //split string into parts of CAM entry
-        // CAM, GPSTime,GPSWeek,Lat,Lng,Alt,RelAlt,Roll,Pitch,Yaw,TimeMS
         std::vector<std::string> cam_parts = split_string(cam_line, ',');
-        std::string s_lat = cam_parts.at(CAM_PARTS::Lat);
-        std::string s_lon = cam_parts.at(CAM_PARTS::Lng);
+
+        //assumve V1
+        std::string s_lat = cam_parts.at(CAM_PARTS_v1::V1_Lat);
+        std::string s_lon = cam_parts.at(CAM_PARTS_v1::V1_Lng);
 //        std::string s_alt_asl = cam_parts.at(CAM_PARTS::Alt);
 //        std::string s_alt_rel = cam_parts.at(CAM_PARTS::RelAlt);
 //        std::string s_roll = cam_parts.at(CAM_PARTS::Roll);
 //        std::string s_pitch = cam_parts.at(CAM_PARTS::Pitch);
 //        std::string s_yaw = cam_parts.at(CAM_PARTS::Yaw);     
 //        std::string s_gps_time = cam_parts.at(CAM_PARTS::GPSTime);
+        
+        //replace with V2 ordinal positions..
+        if (cam_parts.size() > CAM_LEN_v1)
+        {
+            s_lat = cam_parts.at(CAM_PARTS_v2::V2_Lat);
+            s_lon = cam_parts.at(CAM_PARTS_v2::V2_Lng);
+        }
 
+        //convert to flots.
         float cam_lat = stof(s_lat);
         float cam_lon = stof(s_lon);
 
